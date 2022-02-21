@@ -8,7 +8,7 @@ class Matrix
 {
 public:
 	Matrix();//默认构造函数
-	Matrix(const Matrix&M);//拷贝类构造函数
+	Matrix(const Matrix&M);//拷贝类构造函数,类构造
 	Matrix(int row,int col);//构造函数_行列数
 	Matrix(int row, int col, T value);//构造函数_行列数,值
 	~Matrix();//析构函数
