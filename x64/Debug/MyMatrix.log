@@ -1,0 +1,3 @@
+﻿  MyMatrix.cpp
+MyMatrix.obj : error LNK2019: 无法解析的外部符号 "class Matrix<int> __cdecl operator+(class Matrix<int>,int)" (??H@YA?AV?$Matrix@H@@V0@H@Z)，该符号在函数 main 中被引用
+D:\Code\VS C++\MyMatrix\x64\Debug\MyMatrix.exe : fatal error LNK1120: 1 个无法解析的外部命令

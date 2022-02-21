@@ -1,0 +1,3 @@
+﻿  MyMatrix.cpp
+d:\code\vs c++\mymatrix\mymatrix\matrix.h(184): warning C4715: “operator+<int>”: 不是所有的控件路径都返回值
+  MyMatrix.vcxproj -> D:\Code\VS C++\MyMatrix\Debug\MyMatrix.exe
