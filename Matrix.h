@@ -8,22 +8,25 @@ class Matrix
 {
 public:
 	Matrix();//默认构造函数
-	Matrix(const Matrix&M);//拷贝类构造函数,类构造
+	Matrix(const Matrix&M);//拷贝类构造函数
 	Matrix(int row,int col);//构造函数_行列数
 	Matrix(int row, int col, T value);//构造函数_行列数,值
 	~Matrix();//析构函数
+
 	int Getrows() const {return rows;}//获取矩阵行数
 	int Getcols() const {return cols;}//获取矩阵列数
 	int Getsize() const {return size;}//获取矩阵大小
 	void print() const;//输出矩阵
-	Matrix<T> Transpose();//矩阵转置
-	Matrix<double> Inverse();//矩阵求逆(求逆结果无法保证元素数据类型不变)
+	Matrix<T> Transpose() const;//矩阵转置
+	Matrix<double> Inverse() const;//矩阵求逆(求逆结果无法保证元素数据类型不变)
 	T Det() const;//矩阵求行列式
 	int Rank() const;//求矩阵的秩
+	Matrix<T> Rref() const;//求简化的行阶梯形矩阵
 
 
 	//操作符重载
 	T& operator ()(int row, int col);//()操作符重载,用于访问矩阵元素
+	Matrix<T>& operator =(const Matrix<T> &M);//操作符重载,同于赋值
 	void operator +=(T value);//操作符重载,矩阵数加
 	void operator -=(T value);//操作符重载,矩阵数减
 	void operator *=(T value);//操作符重载,矩阵数乘
@@ -110,9 +113,10 @@ void Matrix<T>::print() const {
 		}
 		cout << endl;
 	}
+	cout << endl;
 }
 template<class T>
-Matrix<T> Matrix<T>::Transpose() {
+Matrix<T> Matrix<T>::Transpose() const {
 	Matrix<T> tmp(cols,rows);
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -123,7 +127,26 @@ Matrix<T> Matrix<T>::Transpose() {
 }
 template<class T>
 T& Matrix<T>::operator()(int row, int col) {
+	row--;//矩阵索引从1开始
+	col--;
 	return data[row*cols + col];
+}
+template<class T>
+Matrix<T>& Matrix<T>::operator=(const Matrix<T> &M) {
+	if (this == &M) {
+		return *this;
+	}
+	else {
+		delete[] data;
+		this->rows = M.rows;
+		this->cols = M.cols;
+		this->size = M.size;
+		data = new T[this->size];
+		for (int i = 0; i < this->size; i++) {
+			this->data[i] = M.data[i];
+		}
+		return *this;
+	}
 }
 template<class T>
 void Matrix<T>::operator+=(T value) {
@@ -203,4 +226,54 @@ Matrix<Type> operator-(Matrix<Type> M1, Matrix<Type> M2) {
 		}
 		return tmp;
 	}
+}
+template<class Type>
+Matrix<Type> operator*(Matrix<Type> M, Type value) {
+	Matrix<Type> tmp = M;
+	for (int i = 0; i < tmp.size; i++) {
+		tmp.data[i] *= value;
+	}
+	return tmp;
+}
+template<class Type>
+Matrix<Type> operator*(Type value,Matrix<Type> M ) {
+	Matrix<Type> tmp = M;
+	for (int i = 0; i < tmp.size; i++) {
+		tmp.data[i] *= value;
+	}
+	return tmp;
+}
+template<class Type>
+Matrix<Type> operator*(Matrix<Type> M1, Matrix<Type> M2) {
+	if (M1.cols!=M2.rows) {
+		//矩阵无法相乘
+	}
+	else {
+		int tmp_rows, tmp_cols;
+		tmp_rows = M1.rows;
+		tmp_cols = M2.cols;
+		Matrix<Type> tmp(tmp_rows, tmp_cols);
+		for (int i = 0; i < tmp_rows; i++) {
+			for (int j = 0; j < tmp_cols; j++) {
+				Type value = 0;
+				for (int m = 0; m <M1.cols; m++) {
+					value += M1.data[i*M1.cols + m] * M2.data[m*M2.cols + j];
+				}
+				tmp.data[i*tmp_cols + j] = value;
+			}
+		}
+		return tmp;
+	}
+}
+template<class Type>
+Matrix<Type> operator/(Matrix<Type> M, Type value) {
+	Matrix<Type> tmp = M;
+	for (int i = 0; i < tmp.size; i++) {
+		tmp.data[i] /= value;
+	}
+	return tmp;
+}
+template<class Type>
+Matrix<Type> operator/(Matrix<Type> M1, Matrix<Type> M2) {
+	//M1/M2=M1*M2_inverse
 }
