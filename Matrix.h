@@ -25,10 +25,12 @@ public:
 	void Delete_row(int row);//删除矩阵某行
 	void Delete_col(int col);//删除矩阵某列
 	Matrix<T> Delete_row_col(int row, int col) const;//删除矩阵某行某列
+	Matrix<T> Company() const;//求伴随矩阵
+	Matrix<double> Convert2double() const;//矩阵类型转换
 	template<class Type> 
 	friend Type Cofactor(int i, int j, Matrix<Type> M);//求代数余子式
 	template<class Type>
-	friend Type Det(Matrix<Type> M);
+	friend Type Det(Matrix<Type> M);//求矩阵行列式
 
 	//操作符重载
 	T& operator ()(int row, int col);//()操作符重载,用于访问矩阵元素
@@ -132,6 +134,19 @@ Matrix<T> Matrix<T>::Transpose() const {
 	return tmp;
 }
 template<class T>
+Matrix<double> Matrix<T>::Inverse() const {
+	if (this->cols != this->rows) {
+		//只有方阵才能求逆
+	}
+	else {
+		double det =(double)this->Det();
+		Matrix<T> acc_T = this->Company();
+		Matrix<double> acc_double = acc_T.Convert2double();
+		Matrix<double> inv = acc_double / det;
+		return inv;
+	}
+}
+template<class T>
 T Matrix<T>::Det() const {
 	if (this->size == 1) {
 		return this->data[0];
@@ -202,6 +217,26 @@ Matrix<T> Matrix<T>::Delete_row_col(int row, int col) const {
 	Matrix<T> tmp = *this;
 	tmp.Delete_row(row);
 	tmp.Delete_col(col);
+	return tmp;
+}
+template<class T>
+Matrix<T> Matrix<T>::Company() const {
+	Matrix<T> acc = *this;
+	for (int i = 0; i < this->rows; i++) {
+		for (int j = 0; j < this->cols; j++) {
+			acc.data[i*this->cols + j] = Cofactor(i + 1, j + 1,*this);
+		}
+	}
+	return acc.Transpose();
+}
+template<class T>
+Matrix<double> Matrix<T>::Convert2double() const {
+	Matrix<double> tmp(this->rows, this->cols,0);
+	for(int i = 0; i<this->rows; i++) {
+		for (int j = 0; j < this->cols; j++) {
+			tmp(i + 1, j + 1) = (double)this->data[i*this->cols + j];
+		}
+	}
 	return tmp;
 }
 template<class Type>
