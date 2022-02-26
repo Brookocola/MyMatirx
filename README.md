@@ -3,6 +3,7 @@
 
 ### 理论学习
 **18.06 MIT Introduction to Linear Algebra-Gilbert Strang**  
+[哔哩哔哩视频链接](https://www.bilibili.com/video/BV1ix411f7Yp?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click)  
 1.方程组的几何解释   
 2.矩阵消元Elimination  
 3.乘法和逆矩阵   
