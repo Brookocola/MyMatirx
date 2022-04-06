@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 {
-	Matrix<int> a(4,4,1);
+	Matrix<double> a(4,5,1);
 	a(1, 2) = 2;
 	a(1, 3) = 3;
 	a(1, 4) = 4;
@@ -22,10 +22,10 @@ int main()
 	a(4, 2) = 4;
 	a(4, 3) = 5;
 	a.print();
-	a.Company().print();
-	cout << a.Det()<<endl;
-	a.Inverse().print();
-
+	/*a.Company().print();
+	cout << a.Det()<<endl;*/
+	a.Swap_col(1, 5);
+	a.print();
 	/*Matrix<double> c(2, 2, 3.2);
 	Matrix<double> d(2, 2, 2.1);
 	d(1, 1) = 9;

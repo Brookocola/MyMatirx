@@ -22,8 +22,11 @@ public:
 	T Det() const;//矩阵求行列式
 	int Rank() const;//求矩阵的秩
 	Matrix<T> Rref() const;//求简化的行阶梯形矩阵
+	Matrix<T> Gaussian_elimination() const;//对矩阵进行高斯消元
 	void Delete_row(int row);//删除矩阵某行
 	void Delete_col(int col);//删除矩阵某列
+	void Swap_row(int r1, int r2);//交换矩阵行
+	void Swap_col(int c1, int c2);//交换矩阵列
 	Matrix<T> Delete_row_col(int row, int col) const;//删除矩阵某行某列
 	Matrix<T> Company() const;//求伴随矩阵
 	Matrix<double> Convert2double() const;//矩阵类型转换
@@ -59,7 +62,7 @@ public:
 	template<class Type>
 	friend Matrix<Type> operator/(Matrix<Type> M, Type value);//操作符重载,矩阵数除
 	template<class Type>
-	friend Matrix<Type> operator/(Matrix<Type> M1, Matrix<Type> M2);//操作符重载,矩阵除法
+	friend Matrix<double> operator/(Matrix<Type> M1, Matrix<Type> M2);//操作符重载,矩阵除法
 
 private:
 	int rows, cols;//矩阵行列数
@@ -137,6 +140,7 @@ template<class T>
 Matrix<double> Matrix<T>::Inverse() const {
 	if (this->cols != this->rows) {
 		//只有方阵才能求逆
+		cout << "只有方阵才能求逆" << endl;
 	}
 	else {
 		double det =(double)this->Det();
@@ -160,6 +164,19 @@ T Matrix<T>::Det() const {
 		}
 		return det;
 	}
+}
+template<class T>
+int Matrix<T>::Rank() const {
+	//矩阵求秩
+}
+template<class T>
+Matrix<T> Matrix<T>::Rref() const {
+	//求行最简阶梯型矩阵
+}
+template<class T>
+Matrix<T> Matrix<T>::Gaussian_elimination() const {
+	//矩阵高斯消元
+
 }
 template<class T>
 void Matrix<T>::Delete_row(int row) {
@@ -210,6 +227,46 @@ void Matrix<T>::Delete_col(int col) {
 			
 			this->data[i] = tmp.data[i + flag];
 		}
+	}
+}
+template<class T>
+void Matrix<T>::Swap_row(int r1, int r2) {
+	//矩阵交换行
+	if (r1 > this->rows || r2 > this->rows||r1<1||r2<1) {
+		//超出矩阵范围
+		cout << "行超出矩阵范围,无法交换" << endl;
+	}
+	else
+	{
+		T* row1 = new T[this->cols];
+		for (int j = 0; j < this->cols; j++) {
+			row1[j] = this->data[(r1 - 1)*this->cols + j];
+		}
+		for (int j = 0; j < this->cols; j++) {
+			this->data[(r1 - 1)*this->cols + j] = this->data[(r2 - 1)*this->cols + j];
+			this->data[(r2 - 1)*this->cols + j] = row1[j];
+		}
+		delete[] row1;
+	}
+}
+template<class T>
+void Matrix<T>::Swap_col(int c1, int c2) {
+	//矩阵交换列
+	if (c1 > this->cols || c2 > this->cols||c1<1||c2<1) {
+		//超出矩阵范围
+		cout << "列超出矩阵范围,无法交换" << endl;
+	}
+	else
+	{
+		T* col1 = new T[this->rows];
+		for (int i = 0; i < this->rows; i++) {
+			col1[i] = this->data[i*this->cols + c1-1];
+		}
+		for (int i = 0; i < this->rows; i++) {
+			this->data[i*this->cols + c1 - 1] = this->data[i*this->cols + c2 - 1];
+			this->data[i*this->cols + c2 - 1] = col1[i];
+		}
+		delete[] col1;
 	}
 }
 template<class T>
@@ -332,6 +389,7 @@ template<class Type>
 Matrix<Type> operator+(Matrix<Type> M1, Matrix<Type> M2) {
 	if (M1.cols != M2.cols || M1.rows != M2.rows) {
 		//矩阵大小不同无法相加
+		cout << "矩阵大小不同无法相加" << endl;
 	}
 	else
 	{
@@ -354,6 +412,7 @@ template<class Type>
 Matrix<Type> operator-(Matrix<Type> M1, Matrix<Type> M2) {
 	if (M1.cols != M2.cols || M1.rows != M2.rows) {
 		//矩阵大小不同无法相减
+		cout << "矩阵大小不同无法相减" << endl;
 	}
 	else
 	{
@@ -384,6 +443,7 @@ template<class Type>
 Matrix<Type> operator*(Matrix<Type> M1, Matrix<Type> M2) {
 	if (M1.cols!=M2.rows) {
 		//矩阵无法相乘
+		cout << "M1的列数不等于M2的行数,无法相乘" << endl;
 	}
 	else {
 		int tmp_rows, tmp_cols;
@@ -411,6 +471,9 @@ Matrix<Type> operator/(Matrix<Type> M, Type value) {
 	return tmp;
 }
 template<class Type>
-Matrix<Type> operator/(Matrix<Type> M1, Matrix<Type> M2) {
+Matrix<double> operator/(Matrix<Type> M1, Matrix<Type> M2) {
 	//M1/M2=M1*M2_inverse
+	Matrix<double> M2_inverse = M2.Inverse();
+	Matrix<double> tmp = M1 * M2_inverse;
+	return tmp;
 }
