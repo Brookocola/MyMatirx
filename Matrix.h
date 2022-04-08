@@ -219,48 +219,42 @@ int Matrix<T>::Rank() const {
 template<class T>
 Matrix<T> Matrix<T>::Rref() const {
 	//求行最简阶梯型矩阵
-}
-/***************************************************
-bug:1.结果存在零行时出错
-	2.存在-0
-***************************************************/
-template<class T>
-Matrix<double> Matrix<T>::Gaussian_elimination() const {
-	//向前步骤
 	Matrix<double> M_double = this->Convert2double();
-	for (int i = 1; i < this->rows; i++) {
-		int pos = i;
-		for (int j = i + 1; j <= this->rows; j++) {
-			//(i,i)主元为0时
-			int flag=i;
-			while (M_double(i,i)< 1e-15) 
-			{
-				if (flag == this->rows) {
-					//pos++;
-					break;
-				}
-				if (M_double(flag + 1, i) >= 1e-15) {
-					M_double.Swap_row(i, flag + 1);
-				}
-				else
-				{
-					flag++;
-				}
+	bool ifbreak=false;
+	for (int i = 1,j = 1; i <= rows, j <= cols; i++, j++) {
+		int flag = i;
+		while (abs(M_double(i,j))<1e-6)
+		{
+			if (j == cols&&flag==rows) {
+				//没有下一个主元了
+				ifbreak=true;
+				break;
 			}
-			double coef = M_double(j, pos) / M_double(i, pos);
-			//row j elimination
-			for (int k = 1; k <= this->cols; k++) {
-				M_double(j, k) = M_double(j, k) - coef * M_double(i, k);
-				/*if (M_double(j, k) < 1e-15)
-					M_double(j, k) = 0;*/
+			if (flag == rows) {
+				j++;
+				flag=i;
+			}
+			else if (abs(M_double(flag + 1, j)) >= 1e-6) {
+				M_double.Swap_row(i, flag + 1);
+			}
+			else {
+				flag++;
+			}
+		}
+		if (ifbreak) {
+			break;
+		}
+		for (int k = i + 1; k <= rows; k++) {
+			double coef = M_double(k, j) / M_double(i, j);
+			for (int m = 1; m <= cols; m++) {
+				M_double(k, m) = M_double(k, m) - coef * M_double(i, m);
 			}
 		}
 	}
-	//向后步骤
 	for (int i = this->rows; i >= 1; i--) {
 		for (int j = 1; j <= this->cols;j++) {
 			//寻找主元
-			if (M_double(i, j) != 0) {
+			if (abs(M_double(i, j)) >= 1e-6) {
 				for (int k = i - 1; k >= 1; k--) {
 					double coef = M_double(k, j) / M_double(i, j);
 					//row k 
@@ -278,8 +272,80 @@ Matrix<double> Matrix<T>::Gaussian_elimination() const {
 				break;
 			}
 		}
-		
 	}
+	for (int i = 0; i < size; i++) {
+		if (abs(M_double.data[i]) < 1e-6) {
+			M_double.data[i] = 0;
+		}
+	}
+	return M_double;
+}
+/***************************************************
+bug:1.结果存在零行时出错
+	2.存在-0
+***************************************************/
+template<class T>
+Matrix<double> Matrix<T>::Gaussian_elimination() const {
+	//向前步骤
+	Matrix<double> M_double = this->Convert2double();
+	for (int i = 1; i < this->rows; i++) {
+		int pos = i;
+		for (int j = i + 1; j <= this->rows; j++) {
+			//(i,i)主元为0时
+			int flag=i;
+			while (abs(M_double(i,pos))< 1e-6) 
+			{
+				if (pos == this->cols) {
+					break;
+				}
+				if (flag == this->rows) {
+					pos++;
+					break;
+				}
+				if (abs(M_double(flag + 1, i)) >= 1e-6) {
+					M_double.Swap_row(i, flag + 1);
+				}
+				else
+				{
+					flag++;
+				}
+			}
+			double coef = M_double(j, pos) / M_double(i, pos);
+			//row j elimination
+			for (int k = 1; k <= this->cols; k++) {
+				M_double(j, k) = M_double(j, k) - coef * M_double(i, k);
+			}
+		}
+	}
+	//向后步骤
+	//for (int i = this->rows; i >= 1; i--) {
+	//	for (int j = 1; j <= this->cols;j++) {
+	//		//寻找主元
+	//		if (abs(M_double(i, j)) >= 1e-6) {
+	//			for (int k = i - 1; k >= 1; k--) {
+	//				double coef = M_double(k, j) / M_double(i, j);
+	//				//row k 
+	//				for (int m = 1; m <= this->cols; m++) {
+	//					M_double(k, m) = M_double(k, m) - coef * M_double(i, m);
+	//				}
+	//			}
+	//			if (M_double(i, j) != 1) {
+	//				//主元单位化
+	//				double pivot = M_double(i, j);
+	//				for (int n = 1; n <= this->cols; n++) {
+	//					M_double(i, n) = M_double(i, n) / pivot;
+	//				}
+	//			}
+	//			break;
+	//		}
+	//	}
+	//	
+	//}
+	//for (int i = 0; i < size; i++) {
+	//	if (abs(M_double.data[i]) < 1e-6) {
+	//		M_double.data[i] = 0;
+	//	}
+	//}
 	return M_double;
 }
 template<class T>
