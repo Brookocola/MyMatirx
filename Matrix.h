@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <fstream>
+#include<string>
 using namespace std;
 
 //矩阵类
@@ -13,6 +15,7 @@ public:
 	Matrix(int row, int col, T value);//构造函数_行列数,值
 	~Matrix();//析构函数
 
+	bool Read_file(string filename);//从文件读取构造矩阵
 	int Getrows() const {return rows;}//获取矩阵行数
 	int Getcols() const {return cols;}//获取矩阵列数
 	int Getsize() const {return size;}//获取矩阵大小
@@ -22,7 +25,7 @@ public:
 	T Det() const;//矩阵求行列式
 	int Rank() const;//求矩阵的秩
 	Matrix<T> Rref() const;//求简化的行阶梯形矩阵
-	Matrix<T> Gaussian_elimination() const;//对矩阵进行高斯消元
+	Matrix<double> Gaussian_elimination() const;//对矩阵进行高斯消元
 	void Delete_row(int row);//删除矩阵某行
 	void Delete_col(int col);//删除矩阵某列
 	void Swap_row(int r1, int r2);//交换矩阵行
@@ -117,6 +120,50 @@ Matrix<T>::~Matrix()
 	delete []data;
 }
 template<class T>
+bool Matrix<T>::Read_file(string filename) {
+	//读取txt文件构造矩阵
+	ifstream infile(filename);
+	string line;
+	int row = 0;
+	int col = 0;
+	char pk;
+	T tmp;
+	if (infile.is_open() == false) {
+		cout << "读取文件失败" << endl;
+		return false;
+	}
+	else {
+		//获取行列数
+		while (true)
+		{
+			infile >> tmp;
+			col++;
+			pk = infile.peek();
+			if (pk == '\n')
+				break;
+		}
+		infile.clear();//ifstream返回开头
+		infile.seekg(ios::beg);
+		while (true)
+		{
+			getline(infile, line);
+			row++;
+			if (infile.eof()) break;
+		}
+		//cout << "rows=" << row << " cols=" << col << endl;
+		infile.clear();//ifstream返回开头
+		infile.seekg(ios::beg);
+		this->rows = row;
+		this->cols = col;
+		size = rows * cols;
+		data = new T[size];
+		for (int i = 0; i < size; i++) {
+			infile >> data[i];
+		}
+		return true;
+	}
+}
+template<class T>
 void Matrix<T>::print() const {
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -173,10 +220,67 @@ template<class T>
 Matrix<T> Matrix<T>::Rref() const {
 	//求行最简阶梯型矩阵
 }
+/***************************************************
+bug:1.结果存在零行时出错
+	2.存在-0
+***************************************************/
 template<class T>
-Matrix<T> Matrix<T>::Gaussian_elimination() const {
-	//矩阵高斯消元
-
+Matrix<double> Matrix<T>::Gaussian_elimination() const {
+	//向前步骤
+	Matrix<double> M_double = this->Convert2double();
+	for (int i = 1; i < this->rows; i++) {
+		int pos = i;
+		for (int j = i + 1; j <= this->rows; j++) {
+			//(i,i)主元为0时
+			int flag=i;
+			while (M_double(i,i)< 1e-15) 
+			{
+				if (flag == this->rows) {
+					//pos++;
+					break;
+				}
+				if (M_double(flag + 1, i) >= 1e-15) {
+					M_double.Swap_row(i, flag + 1);
+				}
+				else
+				{
+					flag++;
+				}
+			}
+			double coef = M_double(j, pos) / M_double(i, pos);
+			//row j elimination
+			for (int k = 1; k <= this->cols; k++) {
+				M_double(j, k) = M_double(j, k) - coef * M_double(i, k);
+				/*if (M_double(j, k) < 1e-15)
+					M_double(j, k) = 0;*/
+			}
+		}
+	}
+	//向后步骤
+	for (int i = this->rows; i >= 1; i--) {
+		for (int j = 1; j <= this->cols;j++) {
+			//寻找主元
+			if (M_double(i, j) != 0) {
+				for (int k = i - 1; k >= 1; k--) {
+					double coef = M_double(k, j) / M_double(i, j);
+					//row k 
+					for (int m = 1; m <= this->cols; m++) {
+						M_double(k, m) = M_double(k, m) - coef * M_double(i, m);
+					}
+				}
+				if (M_double(i, j) != 1) {
+					//主元单位化
+					double pivot = M_double(i, j);
+					for (int n = 1; n <= this->cols; n++) {
+						M_double(i, n) = M_double(i, n) / pivot;
+					}
+				}
+				break;
+			}
+		}
+		
+	}
+	return M_double;
 }
 template<class T>
 void Matrix<T>::Delete_row(int row) {
