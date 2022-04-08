@@ -24,7 +24,7 @@ public:
 	Matrix<double> Inverse() const;//矩阵求逆(求逆结果无法保证元素数据类型不变)
 	T Det() const;//矩阵求行列式
 	int Rank() const;//求矩阵的秩
-	Matrix<T> Rref() const;//求简化的行阶梯形矩阵
+	Matrix<double> Rref() const;//求简化的行阶梯形矩阵
 	Matrix<double> Gaussian_elimination() const;//对矩阵进行高斯消元
 	void Delete_row(int row);//删除矩阵某行
 	void Delete_col(int col);//删除矩阵某列
@@ -215,13 +215,23 @@ T Matrix<T>::Det() const {
 template<class T>
 int Matrix<T>::Rank() const {
 	//矩阵求秩
+	int rank = 0;
+	Matrix<double> M = this->Rref();
+	for (int i = 1, j = 1; i <= M.rows&&j <= M.cols;) {
+		if (M(i, j) != 0) {
+			rank++;
+			i++;
+		}
+		j++;
+	}
+	return rank;
 }
 template<class T>
-Matrix<T> Matrix<T>::Rref() const {
+Matrix<double> Matrix<T>::Rref() const {
 	//求行最简阶梯型矩阵
 	Matrix<double> M_double = this->Convert2double();
 	bool ifbreak=false;
-	for (int i = 1,j = 1; i <= rows, j <= cols; i++, j++) {
+	for (int i = 1,j = 1; i <= rows&&j <= cols; i++, j++) {
 		int flag = i;
 		while (abs(M_double(i,j))<1e-6)
 		{
@@ -278,74 +288,6 @@ Matrix<T> Matrix<T>::Rref() const {
 			M_double.data[i] = 0;
 		}
 	}
-	return M_double;
-}
-/***************************************************
-bug:1.结果存在零行时出错
-	2.存在-0
-***************************************************/
-template<class T>
-Matrix<double> Matrix<T>::Gaussian_elimination() const {
-	//向前步骤
-	Matrix<double> M_double = this->Convert2double();
-	for (int i = 1; i < this->rows; i++) {
-		int pos = i;
-		for (int j = i + 1; j <= this->rows; j++) {
-			//(i,i)主元为0时
-			int flag=i;
-			while (abs(M_double(i,pos))< 1e-6) 
-			{
-				if (pos == this->cols) {
-					break;
-				}
-				if (flag == this->rows) {
-					pos++;
-					break;
-				}
-				if (abs(M_double(flag + 1, i)) >= 1e-6) {
-					M_double.Swap_row(i, flag + 1);
-				}
-				else
-				{
-					flag++;
-				}
-			}
-			double coef = M_double(j, pos) / M_double(i, pos);
-			//row j elimination
-			for (int k = 1; k <= this->cols; k++) {
-				M_double(j, k) = M_double(j, k) - coef * M_double(i, k);
-			}
-		}
-	}
-	//向后步骤
-	//for (int i = this->rows; i >= 1; i--) {
-	//	for (int j = 1; j <= this->cols;j++) {
-	//		//寻找主元
-	//		if (abs(M_double(i, j)) >= 1e-6) {
-	//			for (int k = i - 1; k >= 1; k--) {
-	//				double coef = M_double(k, j) / M_double(i, j);
-	//				//row k 
-	//				for (int m = 1; m <= this->cols; m++) {
-	//					M_double(k, m) = M_double(k, m) - coef * M_double(i, m);
-	//				}
-	//			}
-	//			if (M_double(i, j) != 1) {
-	//				//主元单位化
-	//				double pivot = M_double(i, j);
-	//				for (int n = 1; n <= this->cols; n++) {
-	//					M_double(i, n) = M_double(i, n) / pivot;
-	//				}
-	//			}
-	//			break;
-	//		}
-	//	}
-	//	
-	//}
-	//for (int i = 0; i < size; i++) {
-	//	if (abs(M_double.data[i]) < 1e-6) {
-	//		M_double.data[i] = 0;
-	//	}
-	//}
 	return M_double;
 }
 template<class T>

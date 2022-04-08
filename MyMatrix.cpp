@@ -15,6 +15,7 @@ int main()
 	b.print();*/
 	Matrix<double> c = a.Rref();
 	c.print();
+	cout << c.Rank();
 
 	/*Matrix<double> c(2, 2, 3.2);
 	Matrix<double> d(2, 2, 2.1);
