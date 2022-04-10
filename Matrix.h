@@ -24,8 +24,7 @@ public:
 	Matrix<double> Inverse() const;//矩阵求逆(求逆结果无法保证元素数据类型不变)
 	T Det() const;//矩阵求行列式
 	int Rank() const;//求矩阵的秩
-	Matrix<double> Rref() const;//求简化的行阶梯形矩阵
-	Matrix<double> Gaussian_elimination() const;//对矩阵进行高斯消元
+	Matrix<double> Rref() const;//求简化的行阶梯形矩阵->高斯消元法
 	void Delete_row(int row);//删除矩阵某行
 	void Delete_col(int col);//删除矩阵某列
 	void Swap_row(int r1, int r2);//交换矩阵行
@@ -150,7 +149,6 @@ bool Matrix<T>::Read_file(string filename) {
 			row++;
 			if (infile.eof()) break;
 		}
-		//cout << "rows=" << row << " cols=" << col << endl;
 		infile.clear();//ifstream返回开头
 		infile.seekg(ios::beg);
 		this->rows = row;
