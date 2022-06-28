@@ -11,11 +11,14 @@ int main()
 	Matrix<double> a;
 	a.Read_file("D:/mine4ever/1.txt");
 	a.print();
+	//cout<<a.isSymmetric();
+	cout << a.isPositiveDefinite();
 	/*Matrix<double> b = a.Gaussian_elimination();
 	b.print();*/
-	Matrix<double> c = a.Rref();
+
+	/*Matrix<double> c = a.Rref();
 	c.print();
-	cout << c.Rank();
+	cout << c.Rank();*/
 
 	/*Matrix<double> c(2, 2, 3.2);
 	Matrix<double> d(2, 2, 2.1);
@@ -25,6 +28,7 @@ int main()
 	/*Matrix<int> b=(a*3);
 	b.print();
 	(a + b).print();*/
+
 }
 
 

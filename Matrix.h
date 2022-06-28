@@ -1,79 +1,89 @@
-#pragma once
+ï»¿#pragma once
 #include <iostream>
 #include <fstream>
 #include<string>
 using namespace std;
 
-//¾ØÕóÀà
+//çŸ©é˜µç±»
 template<class T>
 class Matrix
 {
 public:
-	Matrix();//Ä¬ÈÏ¹¹Ôìº¯Êı
-	Matrix(const Matrix&M);//¿½±´Àà¹¹Ôìº¯Êı
-	Matrix(int row,int col);//¹¹Ôìº¯Êı_ĞĞÁĞÊı
-	Matrix(int row, int col, T value);//¹¹Ôìº¯Êı_ĞĞÁĞÊı,Öµ
-	~Matrix();//Îö¹¹º¯Êı
+	Matrix();//é»˜è®¤æ„é€ å‡½æ•°
+	Matrix(const Matrix&M);//æ‹·è´ç±»æ„é€ å‡½æ•°
+	Matrix(int row,int col);//æ„é€ å‡½æ•°_è¡Œåˆ—æ•°
+	Matrix(int row, int col, T value);//æ„é€ å‡½æ•°_è¡Œåˆ—æ•°,å€¼
+	~Matrix();//ææ„å‡½æ•°
 
-	bool Read_file(string filename);//´ÓÎÄ¼ş¶ÁÈ¡¹¹Ôì¾ØÕó
-	int Getrows() const {return rows;}//»ñÈ¡¾ØÕóĞĞÊı
-	int Getcols() const {return cols;}//»ñÈ¡¾ØÕóÁĞÊı
-	int Getsize() const {return size;}//»ñÈ¡¾ØÕó´óĞ¡
-	void print() const;//Êä³ö¾ØÕó
-	Matrix<T> Transpose() const;//¾ØÕó×ªÖÃ
-	Matrix<double> Inverse() const;//¾ØÕóÇóÄæ(ÇóÄæ½á¹ûÎŞ·¨±£Ö¤ÔªËØÊı¾İÀàĞÍ²»±ä)
-	T Det() const;//¾ØÕóÇóĞĞÁĞÊ½
-	int Rank() const;//Çó¾ØÕóµÄÖÈ
-	Matrix<double> Rref() const;//Çó¼ò»¯µÄĞĞ½×ÌİĞÎ¾ØÕó->¸ßË¹ÏûÔª·¨
-	void Delete_row(int row);//É¾³ı¾ØÕóÄ³ĞĞ
-	void Delete_col(int col);//É¾³ı¾ØÕóÄ³ÁĞ
-	void Swap_row(int r1, int r2);//½»»»¾ØÕóĞĞ
-	void Swap_col(int c1, int c2);//½»»»¾ØÕóÁĞ
-	Matrix<T> Delete_row_col(int row, int col) const;//É¾³ı¾ØÕóÄ³ĞĞÄ³ÁĞ
-	Matrix<T> Company() const;//Çó°éËæ¾ØÕó
-	Matrix<double> Convert2double() const;//¾ØÕóÀàĞÍ×ª»»
+	bool Read_file(string filename);//ä»æ–‡ä»¶è¯»å–æ„é€ çŸ©é˜µ
+	int Getrows() const {return rows;}//è·å–çŸ©é˜µè¡Œæ•°
+	int Getcols() const {return cols;}//è·å–çŸ©é˜µåˆ—æ•°
+	int Getsize() const {return size;}//è·å–çŸ©é˜µå¤§å°
+	void print() const;//è¾“å‡ºçŸ©é˜µ
+	Matrix<T> Transpose() const;//çŸ©é˜µè½¬ç½®
+	Matrix<double> Inverse() const;//çŸ©é˜µæ±‚é€†(æ±‚é€†ç»“æœæ— æ³•ä¿è¯å…ƒç´ æ•°æ®ç±»å‹ä¸å˜)
+	T Det() const;//çŸ©é˜µæ±‚è¡Œåˆ—å¼
+	int Rank() const;//æ±‚çŸ©é˜µçš„ç§©
+	Matrix<double> Rref() const;//æ±‚ç®€åŒ–çš„è¡Œé˜¶æ¢¯å½¢çŸ©é˜µ->é«˜æ–¯æ¶ˆå…ƒæ³•
+	void Delete_row(int row);//åˆ é™¤çŸ©é˜µæŸè¡Œ
+	void Delete_col(int col);//åˆ é™¤çŸ©é˜µæŸåˆ—
+	void Swap_row(int r1, int r2);//äº¤æ¢çŸ©é˜µè¡Œ
+	void Swap_col(int c1, int c2);//äº¤æ¢çŸ©é˜µåˆ—
+	Matrix<T> Delete_row_col(int row, int col) const;//åˆ é™¤çŸ©é˜µæŸè¡ŒæŸåˆ—
+	Matrix<T> Company() const;//æ±‚ä¼´éšçŸ©é˜µ
+	Matrix<double> Convert2double() const;//çŸ©é˜µç±»å‹è½¬æ¢
+	bool isPositiveDefinite() const;//çŸ©é˜µæ˜¯å¦æ­£å®š
+	bool isSymmetric() const;//çŸ©é˜µæ˜¯å¦å¯¹ç§°
+	bool equal(Matrix<T> M) const;//çŸ©é˜µæ˜¯å¦ç›¸ç­‰
 	template<class Type> 
-	friend Type Cofactor(int i, int j, Matrix<Type> M);//Çó´úÊıÓà×ÓÊ½
+	friend Type Cofactor(int i, int j, Matrix<Type> M);//æ±‚ä»£æ•°ä½™å­å¼
 	template<class Type>
-	friend Type Det(Matrix<Type> M);//Çó¾ØÕóĞĞÁĞÊ½
+	friend Type Det(Matrix<Type> M);//æ±‚çŸ©é˜µè¡Œåˆ—å¼
+	template<class Type>
+	friend bool equal(Matrix<Type> M1, Matrix<Type> M2);//çŸ©é˜µæ˜¯å¦ç›¸ç­‰
 
-	//²Ù×÷·ûÖØÔØ
-	T& operator ()(int row, int col);//()²Ù×÷·ûÖØÔØ,ÓÃÓÚ·ÃÎÊ¾ØÕóÔªËØ
-	Matrix<T>& operator =(const Matrix<T> &M);//²Ù×÷·ûÖØÔØ,Í¬ÓÚ¸³Öµ
-	void operator +=(T value);//²Ù×÷·ûÖØÔØ,¾ØÕóÊı¼Ó
-	void operator -=(T value);//²Ù×÷·ûÖØÔØ,¾ØÕóÊı¼õ
-	void operator *=(T value);//²Ù×÷·ûÖØÔØ,¾ØÕóÊı³Ë
-	void operator /=(T value);//²Ù×÷·ûÖØÔØ,¾ØÕóÊı³ı
+	//æ“ä½œç¬¦é‡è½½
+	T& operator ()(int row, int col);//()æ“ä½œç¬¦é‡è½½,ç”¨äºè®¿é—®çŸ©é˜µå…ƒç´ 
+	Matrix<T>& operator =(const Matrix<T> &M);//æ“ä½œç¬¦é‡è½½,åŒäºèµ‹å€¼
+	void operator +=(T value);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µæ•°åŠ 
+	void operator -=(T value);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µæ•°å‡
+	void operator *=(T value);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µæ•°ä¹˜
+	void operator /=(T value);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µæ•°é™¤
 
-	template<class Type>//ÓÑÔªº¯ÊıÉùÃ÷Ê±ĞèÒª¼Ótemplate<class Type>
-	friend Matrix<Type> operator+(Matrix<Type> M, Type value);//²Ù×÷·ûÖØÔØ,¾ØÕóÊı¼Ó1
+	template<class Type>//å‹å…ƒå‡½æ•°å£°æ˜æ—¶éœ€è¦åŠ template<class Type>
+	friend Matrix<Type> operator+(Matrix<Type> M, Type value);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µæ•°åŠ 1
 	template<class Type>
-	friend Matrix<Type> operator+(Type value, Matrix<Type> M);//²Ù×÷·ûÖØÔØ,¾ØÕóÊı¼Ó2
+	friend Matrix<Type> operator+(Type value, Matrix<Type> M);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µæ•°åŠ 2
 	template<class Type>
-	friend Matrix<Type> operator+(Matrix<Type> M1, Matrix<Type> M2);//²Ù×÷·ûÖØÔØ,¾ØÕó¼Ó·¨
+	friend Matrix<Type> operator+(Matrix<Type> M1, Matrix<Type> M2);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µåŠ æ³•
 	template<class Type>
-	friend Matrix<Type> operator-(Matrix<Type> M, Type value);//²Ù×÷·ûÖØÔØ,¾ØÕóÊı¼õ
+	friend Matrix<Type> operator-(Matrix<Type> M, Type value);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µæ•°å‡
 	template<class Type>
-	friend Matrix<Type> operator-(Matrix<Type> M1, Matrix<Type> M2);//²Ù×÷·ûÖØÔØ,¾ØÕó¼õ·¨
+	friend Matrix<Type> operator-(Matrix<Type> M1, Matrix<Type> M2);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µå‡æ³•
 	template<class Type>
-	friend Matrix<Type> operator*(Matrix<Type> M, Type value);//²Ù×÷·ûÖØÔØ,¾ØÕóÊı³Ë1
+	friend Matrix<Type> operator*(Matrix<Type> M, Type value);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µæ•°ä¹˜1
 	template<class Type>
-	friend Matrix<Type> operator*(Type value, Matrix<Type> M);//²Ù×÷·ûÖØÔØ,¾ØÕóÊı³Ë2
+	friend Matrix<Type> operator*(Type value, Matrix<Type> M);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µæ•°ä¹˜2
 	template<class Type>
-	friend Matrix<Type> operator*(Matrix<Type> M1, Matrix<Type> M2);//²Ù×÷·ûÖØÔØ,¾ØÕó³Ë·¨
+	friend Matrix<Type> operator*(Matrix<Type> M1, Matrix<Type> M2);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µä¹˜æ³•
 	template<class Type>
-	friend Matrix<Type> operator/(Matrix<Type> M, Type value);//²Ù×÷·ûÖØÔØ,¾ØÕóÊı³ı
+	friend Matrix<Type> operator/(Matrix<Type> M, Type value);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µæ•°é™¤
 	template<class Type>
-	friend Matrix<double> operator/(Matrix<Type> M1, Matrix<Type> M2);//²Ù×÷·ûÖØÔØ,¾ØÕó³ı·¨
+	friend Matrix<double> operator/(Matrix<Type> M1, Matrix<Type> M2);//æ“ä½œç¬¦é‡è½½,çŸ©é˜µé™¤æ³•
+	
+	//TODO:
+	//1.åˆ¤æ–­ä¸¤ä¸ªçŸ©é˜µæ˜¯å¦ç›¸ä¼¼
+	//2.çŸ©é˜µç›¸ä¼¼å¯¹è§’åŒ–
+	//3. ...
 
 private:
-	int rows, cols;//¾ØÕóĞĞÁĞÊı
-	int size;//¾ØÕó´óĞ¡
-	T* data;//´æ´¢¾ØÕóÔªËØ
+	int rows, cols;//çŸ©é˜µè¡Œåˆ—æ•°
+	int size;//çŸ©é˜µå¤§å°
+	T* data;//å­˜å‚¨çŸ©é˜µå…ƒç´ 
 };
 
 
-//º¯ÊıÊµÏÖ
+//å‡½æ•°å®ç°
 template<class T>
 Matrix<T>::Matrix() {
 	rows = 0;
@@ -99,7 +109,7 @@ Matrix<T>::Matrix(int row,int col)
 	size = rows*cols;
 	data = new T[size];
 	for (int i = 0; i < size; i++) {
-		data[i] = 0;//È«¸³ÖµÎª0
+		data[i] = 0;//å…¨èµ‹å€¼ä¸º0
 	}
 }
 template<class T>
@@ -110,7 +120,7 @@ Matrix<T>::Matrix(int row, int col,T value)
 	size = rows * cols;
 	data = new T[size];
 	for (int i = 0; i < size; i++) {
-		data[i] = value;//È«¸³ÖµÎªvalue
+		data[i] = value;//å…¨èµ‹å€¼ä¸ºvalue
 	}
 }
 template<class T>
@@ -120,7 +130,7 @@ Matrix<T>::~Matrix()
 }
 template<class T>
 bool Matrix<T>::Read_file(string filename) {
-	//¶ÁÈ¡txtÎÄ¼ş¹¹Ôì¾ØÕó
+	//è¯»å–txtæ–‡ä»¶æ„é€ çŸ©é˜µ
 	ifstream infile(filename);
 	string line;
 	int row = 0;
@@ -128,20 +138,21 @@ bool Matrix<T>::Read_file(string filename) {
 	char pk;
 	T tmp;
 	if (infile.is_open() == false) {
-		cout << "¶ÁÈ¡ÎÄ¼şÊ§°Ü" << endl;
+		cout << "è¯»å–æ–‡ä»¶å¤±è´¥" << endl;
 		return false;
 	}
 	else {
-		//»ñÈ¡ĞĞÁĞÊı
+		//è·å–è¡Œåˆ—æ•°
 		while (true)
 		{
 			infile >> tmp;
 			col++;
 			pk = infile.peek();
-			if (pk == '\n')
-				break;
+			if (pk == '\n') break;
+			if (infile.eof()) break;
+
 		}
-		infile.clear();//ifstream·µ»Ø¿ªÍ·
+		infile.clear();//ifstreamè¿”å›å¼€å¤´
 		infile.seekg(ios::beg);
 		while (true)
 		{
@@ -149,7 +160,7 @@ bool Matrix<T>::Read_file(string filename) {
 			row++;
 			if (infile.eof()) break;
 		}
-		infile.clear();//ifstream·µ»Ø¿ªÍ·
+		infile.clear();//ifstreamè¿”å›å¼€å¤´
 		infile.seekg(ios::beg);
 		this->rows = row;
 		this->cols = col;
@@ -184,16 +195,73 @@ Matrix<T> Matrix<T>::Transpose() const {
 template<class T>
 Matrix<double> Matrix<T>::Inverse() const {
 	if (this->cols != this->rows) {
-		//Ö»ÓĞ·½Õó²ÅÄÜÇóÄæ
-		cout << "Ö»ÓĞ·½Õó²ÅÄÜÇóÄæ" << endl;
+		//åªæœ‰æ–¹é˜µæ‰èƒ½æ±‚é€†
+		cout << "åªæœ‰æ–¹é˜µæ‰èƒ½æ±‚é€†" << endl;
 	}
 	else {
+		//é€†çŸ©é˜µç­‰äºä¼´éšçŸ©é˜µé™¤ä»¥è¡Œåˆ—å¼
 		double det =(double)this->Det();
 		Matrix<T> acc_T = this->Company();
 		Matrix<double> acc_double = acc_T.Convert2double();
 		Matrix<double> inv = acc_double / det;
+		//æ£€æŸ¥-0
+		for (int i = 0; i < inv.size; i++) {
+			if (abs(inv.data[i]) < 1e-6) {
+				inv.data[i] = 0;
+			}
+		}
 		return inv;
 	}
+}
+template<class T>
+bool Matrix<T>::isPositiveDefinite() const {
+	if (this->cols != this->rows) {
+		cout << "åªæœ‰æ–¹é˜µæ‰èƒ½æ±‚æ­£å®šæ€§" << endl;
+	}
+	else if(!this->isSymmetric()) {
+		//æ­£å®šçŸ©é˜µå¿…é¡»ä¸ºå¯¹ç§°çŸ©é˜µ
+		//cout << "æ­£å®šçŸ©é˜µå¿…é¡»ä¸ºå¯¹ç§°çŸ©é˜µ";
+		return false;
+	}
+	else {
+		bool flag = false;
+		int n = this->cols;
+		Matrix<T> tmp = *this;
+		while (n>=1) {
+			if (tmp.Det() > 0) {
+				tmp.Delete_row_col(n, n);
+				n--;
+			}
+			else
+				break;
+		}
+		if (n == 0)
+			flag = true;
+		return flag;
+	}
+}
+template<class T>
+bool Matrix<T>::isSymmetric() const {
+	Matrix<T> m_transpose = this->Transpose();
+	if (this->equal(m_transpose)) {
+		return true;
+	}
+	else
+		return false;
+}
+template<class T>
+bool Matrix<T>::equal(Matrix<T> M) const {
+	bool flag=false;
+	int i;
+	if (this->rows == M.rows && this->cols == M.cols) {
+		for (i = 0; i < M.size; i++) {
+			if (this->data[i] != M.data[i])
+				break;
+		}
+		if (i == M.size)
+			flag = true;
+	}
+	return flag;
 }
 template<class T>
 T Matrix<T>::Det() const {
@@ -202,7 +270,7 @@ T Matrix<T>::Det() const {
 	}
 	else {
 		T det = 0;
-		//°´µÚÒ»ĞĞÕ¹¿ª
+		//æŒ‰ç¬¬ä¸€è¡Œå±•å¼€
 		for (int j = 0; j < this->cols; j++) {
 			Matrix<T> tmp = this->Delete_row_col(1, j + 1);
 			det +=this->data[0 * this->cols + j] * tmp.Det()*(j % 2 ? -1 : 1);
@@ -212,7 +280,7 @@ T Matrix<T>::Det() const {
 }
 template<class T>
 int Matrix<T>::Rank() const {
-	//¾ØÕóÇóÖÈ
+	//çŸ©é˜µæ±‚ç§©
 	int rank = 0;
 	Matrix<double> M = this->Rref();
 	for (int i = 1, j = 1; i <= M.rows&&j <= M.cols;) {
@@ -226,7 +294,7 @@ int Matrix<T>::Rank() const {
 }
 template<class T>
 Matrix<double> Matrix<T>::Rref() const {
-	//ÇóĞĞ×î¼ò½×ÌİĞÍ¾ØÕó
+	//æ±‚è¡Œæœ€ç®€é˜¶æ¢¯å‹çŸ©é˜µ
 	Matrix<double> M_double = this->Convert2double();
 	bool ifbreak=false;
 	for (int i = 1,j = 1; i <= rows&&j <= cols; i++, j++) {
@@ -234,7 +302,7 @@ Matrix<double> Matrix<T>::Rref() const {
 		while (abs(M_double(i,j))<1e-6)
 		{
 			if (j == cols&&flag==rows) {
-				//Ã»ÓĞÏÂÒ»¸öÖ÷ÔªÁË
+				//æ²¡æœ‰ä¸‹ä¸€ä¸ªä¸»å…ƒäº†
 				ifbreak=true;
 				break;
 			}
@@ -261,7 +329,7 @@ Matrix<double> Matrix<T>::Rref() const {
 	}
 	for (int i = this->rows; i >= 1; i--) {
 		for (int j = 1; j <= this->cols;j++) {
-			//Ñ°ÕÒÖ÷Ôª
+			//å¯»æ‰¾ä¸»å…ƒ
 			if (abs(M_double(i, j)) >= 1e-6) {
 				for (int k = i - 1; k >= 1; k--) {
 					double coef = M_double(k, j) / M_double(i, j);
@@ -271,7 +339,7 @@ Matrix<double> Matrix<T>::Rref() const {
 					}
 				}
 				if (M_double(i, j) != 1) {
-					//Ö÷Ôªµ¥Î»»¯
+					//ä¸»å…ƒå•ä½åŒ–
 					double pivot = M_double(i, j);
 					for (int n = 1; n <= this->cols; n++) {
 						M_double(i, n) = M_double(i, n) / pivot;
@@ -291,7 +359,7 @@ Matrix<double> Matrix<T>::Rref() const {
 template<class T>
 void Matrix<T>::Delete_row(int row) {
 	if (row<1 || row>this->rows) {
-		return;//³¬¹ı¾ØÕó·¶Î§
+		return;//è¶…è¿‡çŸ©é˜µèŒƒå›´
 	}
 	else {
 		Matrix<T> tmp=*this;
@@ -313,7 +381,7 @@ void Matrix<T>::Delete_row(int row) {
 template<class T>
 void Matrix<T>::Delete_col(int col) {
 	if (col<1 || col>this->cols) {
-		return;//³¬¹ı¾ØÕó·¶Î§
+		return;//è¶…è¿‡çŸ©é˜µèŒƒå›´
 	}
 	else {
 		Matrix<T> tmp = *this;
@@ -341,10 +409,10 @@ void Matrix<T>::Delete_col(int col) {
 }
 template<class T>
 void Matrix<T>::Swap_row(int r1, int r2) {
-	//¾ØÕó½»»»ĞĞ
+	//çŸ©é˜µäº¤æ¢è¡Œ
 	if (r1 > this->rows || r2 > this->rows||r1<1||r2<1) {
-		//³¬³ö¾ØÕó·¶Î§
-		cout << "ĞĞ³¬³ö¾ØÕó·¶Î§,ÎŞ·¨½»»»" << endl;
+		//è¶…å‡ºçŸ©é˜µèŒƒå›´
+		cout << "è¡Œè¶…å‡ºçŸ©é˜µèŒƒå›´,æ— æ³•äº¤æ¢" << endl;
 	}
 	else
 	{
@@ -361,10 +429,10 @@ void Matrix<T>::Swap_row(int r1, int r2) {
 }
 template<class T>
 void Matrix<T>::Swap_col(int c1, int c2) {
-	//¾ØÕó½»»»ÁĞ
+	//çŸ©é˜µäº¤æ¢åˆ—
 	if (c1 > this->cols || c2 > this->cols||c1<1||c2<1) {
-		//³¬³ö¾ØÕó·¶Î§
-		cout << "ÁĞ³¬³ö¾ØÕó·¶Î§,ÎŞ·¨½»»»" << endl;
+		//è¶…å‡ºçŸ©é˜µèŒƒå›´
+		cout << "åˆ—è¶…å‡ºçŸ©é˜µèŒƒå›´,æ— æ³•äº¤æ¢" << endl;
 	}
 	else
 	{
@@ -420,7 +488,7 @@ Type Det(Matrix<Type> M) {
 	}
 	else {
 		Type det = 0;
-		//°´µÚÒ»ĞĞÕ¹¿ª
+		//æŒ‰ç¬¬ä¸€è¡Œå±•å¼€
 		for (int j = 0; j < M.cols; j++) {
 			Matrix<Type> tmp=M.Delete_row_col(1, j + 1);
 			det += M.data[0 * M.cols + j]*Det(tmp)*(j % 2 ? -1 : 1);
@@ -428,10 +496,10 @@ Type Det(Matrix<Type> M) {
 		return det;
 	}
 }
-//²Ù×÷·ûÖØÔØº¯Êı
+//æ“ä½œç¬¦é‡è½½å‡½æ•°
 template<class T>
 T& Matrix<T>::operator()(int row, int col) {
-	row--;//¾ØÕóË÷Òı´Ó1¿ªÊ¼
+	row--;//çŸ©é˜µç´¢å¼•ä»1å¼€å§‹
 	col--;
 	return data[row*cols + col];
 }
@@ -498,8 +566,8 @@ Matrix<Type> operator+(Type value, Matrix<Type> M) {
 template<class Type>
 Matrix<Type> operator+(Matrix<Type> M1, Matrix<Type> M2) {
 	if (M1.cols != M2.cols || M1.rows != M2.rows) {
-		//¾ØÕó´óĞ¡²»Í¬ÎŞ·¨Ïà¼Ó
-		cout << "¾ØÕó´óĞ¡²»Í¬ÎŞ·¨Ïà¼Ó" << endl;
+		//çŸ©é˜µå¤§å°ä¸åŒæ— æ³•ç›¸åŠ 
+		cout << "çŸ©é˜µå¤§å°ä¸åŒæ— æ³•ç›¸åŠ " << endl;
 	}
 	else
 	{
@@ -521,8 +589,8 @@ Matrix<Type> operator-(Matrix<Type> M, Type value) {
 template<class Type>
 Matrix<Type> operator-(Matrix<Type> M1, Matrix<Type> M2) {
 	if (M1.cols != M2.cols || M1.rows != M2.rows) {
-		//¾ØÕó´óĞ¡²»Í¬ÎŞ·¨Ïà¼õ
-		cout << "¾ØÕó´óĞ¡²»Í¬ÎŞ·¨Ïà¼õ" << endl;
+		//çŸ©é˜µå¤§å°ä¸åŒæ— æ³•ç›¸å‡
+		cout << "çŸ©é˜µå¤§å°ä¸åŒæ— æ³•ç›¸å‡" << endl;
 	}
 	else
 	{
@@ -552,8 +620,8 @@ Matrix<Type> operator*(Type value,Matrix<Type> M ) {
 template<class Type>
 Matrix<Type> operator*(Matrix<Type> M1, Matrix<Type> M2) {
 	if (M1.cols!=M2.rows) {
-		//¾ØÕóÎŞ·¨Ïà³Ë
-		cout << "M1µÄÁĞÊı²»µÈÓÚM2µÄĞĞÊı,ÎŞ·¨Ïà³Ë" << endl;
+		//çŸ©é˜µæ— æ³•ç›¸ä¹˜
+		cout << "M1çš„åˆ—æ•°ä¸ç­‰äºM2çš„è¡Œæ•°,æ— æ³•ç›¸ä¹˜" << endl;
 	}
 	else {
 		int tmp_rows, tmp_cols;
