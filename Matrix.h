@@ -70,6 +70,8 @@ public:
 	friend Matrix<Type> operator/(Matrix<Type> M, Type value);//操作符重载,矩阵数除
 	template<class Type>
 	friend Matrix<double> operator/(Matrix<Type> M1, Matrix<Type> M2);//操作符重载,矩阵除法
+	template<class Type>
+	friend Matrix<Type> operator^(Matrix<Type> M, int power);//操作符重载,矩阵的幂运算
 	
 	//TODO:
 	//1.判断两个矩阵是否相似
@@ -656,4 +658,28 @@ Matrix<double> operator/(Matrix<Type> M1, Matrix<Type> M2) {
 	Matrix<double> M2_inverse = M2.Inverse();
 	Matrix<double> tmp = M1 * M2_inverse;
 	return tmp;
+}
+template<class Type>
+Matrix<Type> operator^(Matrix<Type> M, int power)
+{
+	if (M.cols != M.rows) {
+		cout << "M不是方阵,无法求幂" << endl;
+	}
+	else {
+		//构造同维单位矩阵
+		Matrix<Type> res(M.rows, M.cols);
+		for (int i = 0; i < res.rows; i++) {
+			for (int j = 0; j < res.cols; j++) {
+				if (i == j) {
+					res.data[i * res.cols + j] = (Type)1;
+				}
+			}
+		}
+		//求幂运算
+		for (int i = 0; i < power; i++) {
+			res = res * M;
+		}
+		return res;
+	}
+	
 }

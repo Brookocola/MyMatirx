@@ -11,8 +11,8 @@ int main()
 	Matrix<double> a;
 	a.Read_file("D:/mine4ever/1.txt");
 	a.print();
-	//cout<<a.isSymmetric();
-	cout << a.isPositiveDefinite();
+	Matrix<double> b=a^2;
+	b.print();
 	/*Matrix<double> b = a.Gaussian_elimination();
 	b.print();*/
 
